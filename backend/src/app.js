@@ -12,14 +12,11 @@ import config from "./config/config.js";
 
 const app = express();
 
-passport.use(
-  new GoogleStrategy(
+passport.use( new GoogleStrategy(
     {
       clientID: config.GOOGLE_CLIENT_ID,
       clientSecret: config.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        config.GOOGLE_REDIRECT_URI ||
-        "http://localhost:3000/api/auth/google/callback",
+      callbackURL: config.GOOGLE_REDIRECT_URI
     },
 
     async (accessToken, refreshToken, profile, done) => {
@@ -36,8 +33,7 @@ passport.use(
 app.use(morgan("dev"));
 app.use(helmet());
 
-app.use(
-  cors({
+app.use(cors({
     origin: config.CLIENT_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],

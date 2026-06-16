@@ -36,22 +36,15 @@ function handleGoogleCallback(req, res, next) {
 }
 
 // GOOGLE LOGIN
-authRouter.get(
-  "/google",
-  passport.authenticate("google", {
-    session: false,
-    scope: ["profile", "email"],
-  }),
+authRouter.get("/google", passport.authenticate("google", {
+  session: false,
+  scope: ["profile", "email"],
+}),
 );
 
 // GOOGLE CALLBACK
-authRouter.get(
-  "/google/callback",
-  handleGoogleCallback,
-);
+authRouter.get("/google/callback", handleGoogleCallback);
 
-// Compatibility route for existing Google Console configs.
-authRouter.get("/callback/google", handleGoogleCallback);
 
 // GET CURRENT USER
 authRouter.get("/me", authMiddleware, getCurrentUser);
