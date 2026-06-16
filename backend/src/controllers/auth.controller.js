@@ -3,6 +3,14 @@ import * as userDao from "../dao/user.dao.js";
 import * as utils from "../utils/utils.js";
 import config from "../config/config.js";
 
+const isSecureDeployment = config.CLIENT_URL?.startsWith("https://");
+const cookieOptions = {
+  httpOnly: true,
+  secure: isSecureDeployment,
+  sameSite: isSecureDeployment ? "none" : "lax",
+  maxAge: 3 * 24 * 60 * 60 * 1000,
+};
+
 export async function googleAuthCallback(req, res) {
   try {
     const userData = req.user;
@@ -27,14 +35,7 @@ export async function googleAuthCallback(req, res) {
       fullname: user.fullname,
     });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("token", token, cookieOptions);
 
     return res.redirect(config.CLIENT_URL);
   } catch (error) {
@@ -64,10 +65,8 @@ export async function getCurrentUser(req, res) {
 export function logout(req, res) {
   res.clearCookie("token", {
     httpOnly: true,
-
-    secure: process.env.NODE_ENV === "production",
-
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: isSecureDeployment,
+    sameSite: isSecureDeployment ? "none" : "lax",
   });
 
   return res.status(200).json({
