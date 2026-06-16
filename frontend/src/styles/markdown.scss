@@ -1,0 +1,477 @@
+// ═══════════════════════════════════════════
+//  Markdown Renderer Styles — IMO AI
+//  Styled to match ChatGPT's clean typography
+// ═══════════════════════════════════════════
+
+.md {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-primary);
+
+  // ─── First/last child spacing ──────────────
+  >*:first-child {
+    margin-top: 0 !important;
+  }
+
+  >*:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  // ─── Paragraphs ────────────────────────────
+  .md-paragraph {
+    margin: 0 0 16px;
+    line-height: 1.7;
+    color: var(--text-primary);
+
+    @media (max-width: 640px) {
+      margin: 0 0 12px;
+      line-height: 1.6;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // ─── Headings ──────────────────────────────
+  .md-heading {
+    color: var(--text-heading);
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 24px 0 12px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .md-h1 {
+    font-size: 1.5em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .md-h2 {
+    font-size: 1.3em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+
+  .md-h3 {
+    font-size: 1.15em;
+  }
+
+  .md-h4 {
+    font-size: 1em;
+  }
+
+  // ─── Strong / Em ───────────────────────────
+  .md-strong {
+    color: var(--text-heading);
+    font-weight: 600;
+  }
+
+  .md-em {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  // ─── Links ─────────────────────────────────
+  .md-link {
+    color: #7da4f5;
+    text-decoration: underline;
+    text-decoration-color: rgba(125, 164, 245, 0.35);
+    text-underline-offset: 3px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+
+    &:hover {
+      color: #a8c4fa;
+      text-decoration-color: rgba(168, 196, 250, 0.7);
+    }
+  }
+
+  // ─── Inline code ───────────────────────────
+  // Subtle, lighter styling — not overpowering
+  .md-inline-code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+    background: rgba(135, 131, 120, 0.15); // neutral grey, not purple
+    border: 1px solid rgba(135, 131, 120, 0.25);
+    padding: 1.5px 6px;
+    border-radius: 4px;
+    font-size: 0.875em;
+    color: #e3c38a; // warm amber — like VS Code / ChatGPT inline code
+    white-space: pre-wrap;
+    word-break: break-word;
+    /* changed from break-all */
+    overflow-wrap: break-word;
+    /* changed from anywhere */
+    vertical-align: baseline;
+  }
+
+  // ─── Code blocks ───────────────────────────
+  .md-code {
+    width: 100%;
+    max-width: 100%;
+    margin: 16px 0;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    background: #171717;
+    box-shadow: none;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: auto;
+      padding: 12px 16px 8px;
+      background: transparent;
+      border-bottom: none;
+
+      @media (max-width: 640px) {
+        padding: 10px 12px 6px;
+      }
+    }
+
+    &__lang {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #ababab;
+      font-family: 'Inter', system-ui, sans-serif;
+      text-transform: capitalize;
+      letter-spacing: 0.01em;
+
+      svg {
+        color: #888;
+        flex-shrink: 0;
+      }
+    }
+
+    &__copy {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 12px;
+      font-family: 'Inter', system-ui, sans-serif;
+      cursor: pointer;
+      padding: 5px 8px;
+      border-radius: 5px;
+      transition: color 0.15s ease, background 0.15s ease;
+      white-space: nowrap;
+
+      span {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      &:hover {
+        color: #e5e5e5;
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      &:focus-visible {
+        outline: 2px solid rgba(145, 119, 255, 0.5);
+        outline-offset: 2px;
+      }
+    }
+
+    &__syntax,
+    &__plain {
+      display: block;
+      margin: 0;
+      padding: 0 16px 16px;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      background: transparent !important;
+      color: #abb2bf;
+      font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.7;
+      tab-size: 2;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+
+      @media (max-width: 640px) {
+        padding: 0 12px 12px;
+        font-size: 12px;
+      }
+
+      code {
+        display: inline-block;
+        min-width: 100%;
+        background: transparent !important;
+        border: 0;
+        padding: 0;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        text-shadow: none;
+        white-space: pre;
+      }
+
+      &::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.22);
+      }
+    }
+
+    &__content {
+      background: transparent !important;
+    }
+
+    // Token colours — One Dark Pro / ChatGPT Code theme
+    span,
+    .token,
+    .react-syntax-highlighter-line-number {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+      color: #5c6370;
+      font-style: italic;
+    }
+
+    .token.punctuation {
+      color: #abb2bf;
+    }
+
+    .token.property,
+    .token.tag,
+    .token.boolean,
+    .token.number,
+    .token.constant,
+    .token.symbol,
+    .token.deleted {
+      color: #e06c75;
+    }
+
+    .token.selector,
+    .token.attr-name,
+    .token.string,
+    .token.char,
+    .token.builtin,
+    .token.inserted {
+      color: #98c379;
+    }
+
+    .token.operator,
+    .token.entity,
+    .token.url {
+      color: #56b6c2;
+    }
+
+    .token.atrule,
+    .token.attr-value,
+    .token.keyword {
+      color: #c678dd;
+    }
+
+    .token.function,
+    .token.class-name {
+      color: #61afef;
+    }
+
+    .token.regex,
+    .token.important,
+    .token.variable {
+      color: #e5c07b;
+    }
+
+    .token.important,
+    .token.bold {
+      font-weight: 600;
+    }
+
+    .token.italic {
+      font-style: italic;
+    }
+  }
+
+  // ─── Tables ────────────────────────────────
+  .md-table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+    }
+  }
+
+  .md-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+
+    &__head {
+      background: var(--bg-surface);
+    }
+
+    &__th {
+      padding: 10px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-heading);
+      border-bottom: 1px solid var(--border-strong);
+      white-space: nowrap;
+    }
+
+    &__td {
+      padding: 10px 16px;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.65;
+    }
+
+    &__row {
+      transition: background 0.12s ease;
+
+      &:hover .md-table__td {
+        background: rgba(124, 92, 252, 0.04);
+      }
+
+      &:last-child .md-table__td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  // ─── Lists ─────────────────────────────────
+  .md-list {
+    margin: 16px 0;
+    padding-left: 24px;
+
+    @media (max-width: 640px) {
+      padding-left: 20px;
+    }
+
+    &--ul {
+      list-style-type: disc;
+
+      .md-list--ul {
+        list-style-type: circle;
+      }
+
+      .md-list--ul .md-list--ul {
+        list-style-type: square;
+      }
+    }
+
+    &--ol {
+      list-style-type: decimal;
+    }
+  }
+
+  .md-list__item {
+    margin: 8px 0;
+    line-height: 1.7;
+    color: var(--text-primary);
+    padding-left: 4px;
+
+    &::marker {
+      color: var(--text-primary);
+    }
+
+    .md-list {
+      margin: 8px 0;
+    }
+
+    input[type="checkbox"] {
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 3px;
+      margin-right: 7px;
+      vertical-align: middle;
+      position: relative;
+      cursor: default;
+
+      &:checked {
+        background: var(--accent);
+        border-color: var(--accent);
+
+        &::after {
+          content: "✓";
+          position: absolute;
+          top: -1px;
+          left: 2px;
+          font-size: 10px;
+          color: white;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  // ─── Blockquotes ───────────────────────────
+  .md-blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 8px 18px;
+    margin: 16px 0;
+    background: rgba(124, 92, 252, 0.05);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--text-secondary);
+
+    .md-paragraph {
+      margin: 4px 0;
+      color: var(--text-secondary);
+    }
+
+    .md-blockquote {
+      margin: 8px 0;
+      border-left-color: rgba(124, 92, 252, 0.4);
+    }
+  }
+
+  // ─── Horizontal rule ───────────────────────
+  .md-hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+}
