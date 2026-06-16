@@ -1,10 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
-import {googleAuthCallback,getCurrentUser,logout} from "../controllers/auth.controller.js";
+import { googleAuthCallback, getCurrentUser, logout } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
+import config from "../config/config.js";
 
 const authRouter = Router();
-const clientLoginUrl = `${process.env.CLIENT_URL || "http://localhost:5173"}/login`;
+const clientLoginUrl = `${config.CLIENT_URL || "http://localhost:5173"}/login`;
 
 function handleGoogleCallback(req, res, next) {
   passport.authenticate("google", { session: false }, (error, user) => {

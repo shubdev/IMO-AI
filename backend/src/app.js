@@ -8,16 +8,17 @@ import chatRouter from "./routes/chat.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import helmet from "helmet";
 import ragRouter from "./features/rag/routes/rag.route.js";
+import config from "./config/config.js";
 
 const app = express();
 
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientID: config.GOOGLE_CLIENT_ID,
+      clientSecret: config.GOOGLE_CLIENT_SECRET,
       callbackURL:
-        process.env.GOOGLE_REDIRECT_URI ||
+        config.GOOGLE_REDIRECT_URI ||
         "http://localhost:3000/api/auth/google/callback",
     },
 
@@ -37,7 +38,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: config.CLIENT_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })

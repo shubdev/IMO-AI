@@ -72,8 +72,8 @@ export default {
   MONGODB_URI: process.env.MONGODB_URI,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
-  CLIENT_URL: process.env.CLIENT_URL,
+  GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI?.trim().replace(/\/+$/, ""),
+  CLIENT_URL: process.env.CLIENT_URL?.trim().replace(/\/+$/, ""),
   PINECONE_API_KEY: process.env.PINECONE_API_KEY,
   PINECONE_INDEX_NAME: process.env.PINECONE_INDEX_NAME,
 };
