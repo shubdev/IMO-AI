@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router";
 
 import { setUser, clearUser, setLoading } from "../state/auth.slice";
 
 import { getCurrentUser } from "../services/auth.api";
 
-export const useAuth = () => {
+export const useAuth = (pathname) => {
   const dispatch = useDispatch();
-  const location = useLocation();
 
   useEffect(() => {
-    const path = location.pathname;
+    const path = pathname || window.location.pathname;
 
     if (path === "/login") {
       dispatch(clearUser());
@@ -55,5 +53,5 @@ export const useAuth = () => {
     return () => {
       isActive = false;
     };
-  }, [dispatch, location.pathname]);
+  }, [dispatch, pathname]);
 };
