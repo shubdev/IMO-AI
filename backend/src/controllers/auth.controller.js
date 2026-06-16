@@ -6,6 +6,7 @@ import config from "../config/config.js";
 const isSecureDeployment = config.CLIENT_URL?.startsWith("https://");
 const cookieOptions = {
   httpOnly: true,
+  path: "/",
   secure: isSecureDeployment,
   sameSite: isSecureDeployment ? "none" : "lax",
   maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -65,6 +66,7 @@ export async function getCurrentUser(req, res) {
 export function logout(req, res) {
   res.clearCookie("token", {
     httpOnly: true,
+    path: "/",
     secure: isSecureDeployment,
     sameSite: isSecureDeployment ? "none" : "lax",
   });

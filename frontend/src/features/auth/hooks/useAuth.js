@@ -1,19 +1,40 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router";
 
-import { setUser, clearUser } from "../state/auth.slice";
+import { setUser, clearUser, setLoading } from "../state/auth.slice";
 
 import { getCurrentUser } from "../services/auth.api";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
-  const hasCheckedRef = useRef(false);
+  const location = useLocation();
 
   useEffect(() => {
+    const path = location.pathname;
+
+    if (path === "/login") {
+      dispatch(clearUser());
+      return;
+    }
+
+    if (path === "/api/auth/google/callback") {
+      dispatch(setLoading(true));
+      return;
+    }
+
+    let isActive = true;
+
     async function checkAuth() {
       try {
+        dispatch(setLoading(true));
+
         const data = await getCurrentUser();
+
+        if (!isActive) {
+          return;
+        }
 
         if (data?.success) {
           dispatch(setUser(data.user));
@@ -21,24 +42,18 @@ export const useAuth = () => {
           dispatch(clearUser());
         }
       } catch {
+        if (!isActive) {
+          return;
+        }
+
         dispatch(clearUser());
       }
     }
 
-    if (hasCheckedRef.current) {
-      return;
-    }
-
-    hasCheckedRef.current = true;
-
-    const path = window.location.pathname;
-
-    // Avoid expected 401 noise on the public login route.
-    if (path === "/login") {
-      dispatch(clearUser());
-      return;
-    }
-
     checkAuth();
-  }, [dispatch]);
+
+    return () => {
+      isActive = false;
+    };
+  }, [dispatch, location.pathname]);
 };

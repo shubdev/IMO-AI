@@ -7,7 +7,7 @@ const AuthCallback = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/", { replace: true });
-    }, 0);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [navigate]);
