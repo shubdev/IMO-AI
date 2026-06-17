@@ -5,7 +5,8 @@ import * as utils from "../utils/utils.js";
 import config from "../config/config.js";
 
 const isProduction = process.env.NODE_ENV === "production";
-const isSecure = isProduction || config.CLIENT_URL?.startsWith("https://");
+// Secure flag only when the client URL uses https (i.e., real production https domain)
+const isSecure = config.CLIENT_URL?.startsWith("https://");
 
 const cookieOptions = {
   httpOnly: true,
