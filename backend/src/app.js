@@ -51,8 +51,13 @@ app.get("/.well-known/appspecific/com.chrome.devtools.json", (_req, res) => {
   res.status(204).end();
 });
 
-app.get("/", (req, res) => {
-  res.send("Welcome to MentoAI Backend!");
+app.get('/', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    const path = require('path');
+    const buildPath = path.resolve(__dirname, '../../frontend/dist');
+    return res.sendFile(path.join(buildPath, 'index.html'));
+  }
+  res.send('Welcome to MentoAI Backend!');
 });
 
 app.use("/api/chat/message", chatRouter);
