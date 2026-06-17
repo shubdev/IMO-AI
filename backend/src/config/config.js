@@ -25,7 +25,7 @@ if (!process.env.MONGODB_URI) {
 
 if (!process.env.CLIENT_URL) {
   if (isProduction) {
-    throw new Error("Error: CLIENT_URL is not set in the environment variables.");
+    console.warn('CLIENT_URL not set, using defaultClientUrl');
   }
 }
 

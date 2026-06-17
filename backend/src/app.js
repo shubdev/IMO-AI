@@ -60,6 +60,17 @@ app.use("/api/chat/message", chatRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/rag", ragRouter);
 
+// Health check endpoint
+app.get('/health', (req, res) => res.status(200).json({ success: true, message: 'Server is healthy' }));
+
+// Catch-all 404 for API routes (JSON response)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ success: false, message: 'API endpoint not found' });
+  }
+  next();
+});
+
 // ERROR HANDLING
 app.use((err, req, res, next) => {
   console.error(err.stack);
