@@ -2,8 +2,6 @@ import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import chatRouter from "./routes/chat.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import helmet from "helmet";
@@ -11,39 +9,41 @@ import ragRouter from "./features/rag/routes/rag.route.js";
 import config from "./config/config.js";
 
 const app = express();
-
-passport.use( new GoogleStrategy(
-    {
-      clientID: config.GOOGLE_CLIENT_ID,
-      clientSecret: config.GOOGLE_CLIENT_SECRET,
-      callbackURL: config.GOOGLE_REDIRECT_URI
-    },
-
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        return done(null, profile);
-      } catch (error) {
-        return done(error, null);
-      }
-    },
-  ),
-);
+app.set('trust proxy', 1); // trust first proxy for secure cookies
 
 // MIDDLEWARE
 app.use(morgan("dev"));
 app.use(helmet());
 
+const allowedOrigins = [
+  config.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+].filter(Boolean);
+
 app.use(cors({
-    origin: config.CLIENT_URL,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  })
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    const normalizedOrigin = origin.trim().replace(/\/+$/, "");
+    const isAllowed = allowedOrigins.some(allowed => {
+      return allowed.trim().replace(/\/+$/, "").toLowerCase() === normalizedOrigin.toLowerCase();
+    });
+
+    if (isAllowed || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS error: Origin ${origin} not allowed`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+})
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(passport.initialize());
 
 // ROUTES
 // Silence Chrome DevTools well-known probe (harmless browser request)

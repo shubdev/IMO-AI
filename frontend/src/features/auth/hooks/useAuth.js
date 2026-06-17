@@ -12,16 +12,6 @@ export const useAuth = (pathname) => {
   useEffect(() => {
     const path = pathname || window.location.pathname;
 
-    if (path === "/login") {
-      dispatch(clearUser());
-      return;
-    }
-
-    if (path === "/api/auth/google/callback") {
-      dispatch(setLoading(true));
-      return;
-    }
-
     let isActive = true;
 
     async function checkAuth() {
@@ -45,6 +35,10 @@ export const useAuth = (pathname) => {
         }
 
         dispatch(clearUser());
+      } finally {
+        if (isActive) {
+          dispatch(setLoading(false));
+        }
       }
     }
 

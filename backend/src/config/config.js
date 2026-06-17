@@ -6,9 +6,6 @@ const isProduction = process.env.NODE_ENV === "production";
 const defaultClientUrl = isProduction
   ? process.env.CLIENT_URL
   : "http://localhost:5173";
-const defaultGoogleRedirectUri = isProduction
-  ? process.env.GOOGLE_REDIRECT_URI
-  : "http://localhost:3000/api/auth/google/callback";
 
 if (!process.env.MISTRAL_API_KEY) {
   throw new Error(
@@ -24,26 +21,6 @@ if (!process.env.MONGODB_URI) {
   throw new Error(
     "Error: MONGODB_URI is not set in the environment variables.",
   );
-}
-
-if (!process.env.GOOGLE_CLIENT_ID) {
-  throw new Error(
-    "Error: GOOGLE_CLIENT_ID is not set in the environment variables.",
-  );
-}
-
-if (!process.env.GOOGLE_CLIENT_SECRET) {
-  throw new Error(
-    "Error: GOOGLE_CLIENT_SECRET is not set in the environment variables.",
-  );
-}
-
-if (!process.env.GOOGLE_REDIRECT_URI) {
-  if (isProduction) {
-    throw new Error(
-      "Error: GOOGLE_REDIRECT_URI is not set in the environment variables.",
-    );
-  }
 }
 
 if (!process.env.CLIENT_URL) {
@@ -82,11 +59,6 @@ export default {
   TAVILY_API_KEY: process.env.TAVILY_API_KEY,
   JWT_SECRET: process.env.JWT_SECRET,
   MONGODB_URI: process.env.MONGODB_URI,
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  GOOGLE_REDIRECT_URI: (process.env.GOOGLE_REDIRECT_URI || defaultGoogleRedirectUri)
-    ?.trim()
-    .replace(/\/+$/, ""),
   CLIENT_URL: (process.env.CLIENT_URL || defaultClientUrl)
     ?.trim()
     .replace(/\/+$/, ""),

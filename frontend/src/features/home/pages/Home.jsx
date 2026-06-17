@@ -32,6 +32,22 @@ const Home = () => {
           Start chat
           <ArrowRight size={18} />
         </button>
+
+        <button
+          type="button"
+          className="home__logout"
+          onClick={async () => {
+            try {
+              await logoutUser();
+              dispatch(clearUser());
+              navigate('/login', { replace: true });
+            } catch (e) {
+              console.error('Logout failed', e);
+            }
+          }}
+        >
+          Logout
+        </button>
       </section>
     </main>
   );

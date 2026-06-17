@@ -5,8 +5,7 @@ import Chat from "../features/chats/pages/Chat";
 import Home from "../features/home/pages/Home";
 
 import Login from "../features/auth/pages/Login";
-
-import AuthCallback from "../features/auth/pages/AuthCallback";
+import Register from "../features/auth/pages/Register";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 import AuthLayout from "../components/AuthLayout";
@@ -16,14 +15,14 @@ export const router = createBrowserRouter([
     path: "/",
     element: <AuthLayout />,
     children: [
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "api/auth/google/callback",
-        element: <AuthCallback />,
-      },
+        {
+          path: "register",
+          element: <Register />, 
+        },
+        {
+          path: "login",
+          element: <Login />, 
+        },
       {
         index: true,
         element: (

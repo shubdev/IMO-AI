@@ -1,43 +1,35 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { setUser, setError, clearError } from "../state/auth.slice";
-import { loginUser } from "../services/auth.api"; // login API
+import { setUser, setError } from "../state/auth.slice";
+import { registerUser } from "../services/auth.api"; // register API
 import mentoLogo from "../../../assets/mentoai_logo.png";
-import "../../../styles/Login.scss";
+import "../../../styles/Login.scss"; // reuse same styles
 
-const Login = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
+    fullname: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setLocalError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isAuthenticated, loading: authLoading } = useSelector((state) => state.auth);
-
-  // Auto-redirect already authenticated users to home
-  useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      navigate("/", { replace: true });
-    }
-  }, [isAuthenticated, authLoading, navigate]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    // Clear error when user starts typing
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) setLocalError("");
   };
 
   const validateForm = () => {
+    if (!formData.fullname.trim()) {
+      setLocalError("Full name is required");
+      return false;
+    }
     if (!formData.email.trim()) {
       setLocalError("Email is required");
       return false;
@@ -55,6 +47,10 @@ const Login = () => {
       setLocalError("Password must be at least 6 characters long");
       return false;
     }
+    if (formData.password !== formData.confirmPassword) {
+      setLocalError("Passwords do not match");
+      return false;
+    }
     return true;
   };
 
@@ -64,16 +60,20 @@ const Login = () => {
     setLoading(true);
     setLocalError("");
     try {
-      const response = await loginUser(formData.email, formData.password);
+      const response = await registerUser(
+        formData.fullname,
+        formData.email,
+        formData.password
+      );
       if (response.success) {
         dispatch(setUser(response.user));
         navigate("/", { replace: true });
       } else {
-        setLocalError(response.message || "Login failed");
-        dispatch(setError(response.message || "Login failed"));
+        setLocalError(response.message || "Registration failed");
+        dispatch(setError(response.message || "Registration failed"));
       }
     } catch (err) {
-      console.error("Login error:", err);
+      console.error("Register error:", err);
       setLocalError("An error occurred. Please try again.");
       dispatch(setError("An error occurred. Please try again."));
     } finally {
@@ -81,18 +81,8 @@ const Login = () => {
     }
   };
 
-  if (authLoading) {
-    return (
-      <div className="app-loader">
-        <div className="app-loader__mark">M</div>
-        <span className="app-loader__text">Loading IMO AI...</span>
-      </div>
-    );
-  }
-
   return (
     <section className="login">
-      {/* Animated background orbs */}
       <div className="login__orb login__orb--1" />
       <div className="login__orb login__orb--2" />
       <div className="login__orb login__orb--3" />
@@ -101,22 +91,30 @@ const Login = () => {
         <div className="login__logo">
           <img src={mentoLogo} alt="MentoAI" className="login__logo-img" />
         </div>
-
         <p className="login__subtitle">
-          Your intelligent AI mentor for learning, coding, and creative problem-solving
+          Create your MentoAI account
         </p>
-
-        <div className="login__divider">
-          <span>Login</span>
-        </div>
-
+        <div className="login__divider"><span>Register</span></div>
         <form className="login__form" onSubmit={handleSubmit}>
+          <div className="login__form-group">
+            <label className="login__label" htmlFor="fullname">Full Name</label>
+            <input
+              id="fullname"
+              name="fullname"
+              type="text"
+              value={formData.fullname}
+              onChange={handleInputChange}
+              placeholder="Your Name"
+              className="login__input"
+              disabled={loading}
+            />
+          </div>
           <div className="login__form-group">
             <label htmlFor="email" className="login__label">Email Address</label>
             <input
               id="email"
-              type="email"
               name="email"
+              type="email"
               value={formData.email}
               onChange={handleInputChange}
               placeholder="you@example.com"
@@ -124,13 +122,12 @@ const Login = () => {
               disabled={loading}
             />
           </div>
-
           <div className="login__form-group">
             <label htmlFor="password" className="login__label">Password</label>
             <input
               id="password"
-              type="password"
               name="password"
+              type="password"
               value={formData.password}
               onChange={handleInputChange}
               placeholder="••••••"
@@ -138,31 +135,34 @@ const Login = () => {
               disabled={loading}
             />
           </div>
-
+          <div className="login__form-group">
+            <label htmlFor="confirmPassword" className="login__label">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              placeholder="••••••"
+              className="login__input"
+              disabled={loading}
+            />
+          </div>
           {error && <div className="login__error-message">{error}</div>}
-
-          <button
-            type="submit"
-            className="login__submit-btn"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Log In"}
+          <button type="submit" className="login__submit-btn" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
-
         <p className="login__terms">
-          By continuing, you agree to our Terms of Service and Privacy Policy
+          By creating an account, you agree to our Terms of Service and Privacy Policy
         </p>
         <p className="login__switch">
-          Don’t have an account? <a href="/register" className="login__link">Register</a>
+          Already have an account? <a href="/login" className="login__link">Login</a>
         </p>
       </div>
-
-      <div className="login__footer">
-        <span>Built with ✦ MentoAI</span>
-      </div>
+      <div className="login__footer"><span>Built with ✦ MentoAI</span></div>
     </section>
   );
 };
 
-export default Login;
+export default Register;
