@@ -51,7 +51,7 @@ app.get("/.well-known/appspecific/com.chrome.devtools.json", (_req, res) => {
   res.status(204).end();
 });
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
   if (process.env.NODE_ENV === 'production') {
     const path = require('path');
     const buildPath = path.resolve(__dirname, '../../frontend/dist');
